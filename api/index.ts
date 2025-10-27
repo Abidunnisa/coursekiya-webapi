@@ -1,7 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
+// Load .env when running locally via npm run dev
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -119,3 +122,5 @@ if (process.env.NODE_ENV !== 'production' && require.main === module) {
   const port = process.env.PORT || 5000;
   app.listen(port, () => console.log(`Dev server listening on http://localhost:${port}`));
 }
+
+export default app;
