@@ -1,11 +1,7 @@
 import express from 'express';
-import serverless from 'serverless-http';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
 
-// Load .env when running locally via npm run dev
-dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -118,8 +114,6 @@ app.get('/api/webinars/:id', async (req, res) => {
     return res.status(500).json({ error: 'internal' });
   }
 });
-
-export const handler = serverless(app);
 
 if (process.env.NODE_ENV !== 'production' && require.main === module) {
   const port = process.env.PORT || 5000;
