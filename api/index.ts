@@ -1,6 +1,9 @@
-import express from 'express';
+/* Updated api/index.ts
+  Includes existing endpoints plus new auth, trending, and progress tracking.
+*/
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
 // Load .env when running locally via npm run dev
@@ -107,6 +110,26 @@ app.get('/api/webinars/:id', async (req, res) => {
       .select('*, instructors(*)')
       .eq('webinar_id', id)
       .single();
+    if (error) {
+      console.error('Supabase error:', error);
+      return res.status(500).json({ error });
+    }
+    return res.json(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'internal' });
+  }
+});
+
+app.get('/api/topics', async (_req, res) => {
+  try {
+    const { data, error } = await supabase
+      .schema('coursekiya')
+      .from('topics')
+      .select('*')
+      .eq('course_id', _req.query['course_id'])
+      .order("topic_reference_id", { ascending: true });
+
     if (error) {
       console.error('Supabase error:', error);
       return res.status(500).json({ error });
